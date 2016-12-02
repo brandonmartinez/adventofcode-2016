@@ -1,49 +1,55 @@
-function calculateNumberPuzzle1(startingLocation, set) {
-    var currentLocation = startingLocation;
+var puzzle1Grid = [
+        [7, 8, 9],
+        [4, 5, 6],
+        [1, 2, 3],
+    ],
+    puzzle1Processor = {
+        U: function (x, y) {
+            x++;
 
-    /*
+            return {
+                x: (x > 2) ? 2 : x,
+                y: y
+            };
+        },
+        D: function (x, y) {
+            x--;
 
-    Bounds detection on this box:
+            return {
+                x: (x < 0) ? 0 : x,
+                y: y
+            };
+        },
+        L: function (x, y) {
+            y--;
 
-    1 2 3
-    4 5 6
-    7 8 9
+            return {
+                x: x,
+                y: (y < 0) ? 0 : y
+            };
+        },
+        R: function (x, y) {
+            y++;
 
-    There's probably a better way, but this works
+            return {
+                x: x,
+                y: (y > 2) ? 2 : y
+            };
+        }
+    };
 
-    */
+function calculateNumberPuzzle1(startingNumber, set) {
+    // Calculate the X/Y for the location (we're flipping the X since our numbers don't start at the origin)
+    var x = Math.floor(Math.abs((startingNumber - 9)) / 3),
+        y = (startingNumber - 1) % 3;
 
     set.forEach(function (direction) {
-        var temporaryLocation = currentLocation;
-        switch (direction) {
-            case "U":
-                temporaryLocation = currentLocation - 3;
-                if (temporaryLocation > 0) {
-                    currentLocation = temporaryLocation;
-                }
-                break;
-            case "D":
-                temporaryLocation = currentLocation + 3;
-                if (temporaryLocation < 10) {
-                    currentLocation = temporaryLocation;
-                }
-                break;
-            case "L":
-                temporaryLocation = currentLocation - 1;
-                if (temporaryLocation > 0 && temporaryLocation !== 3 && temporaryLocation !== 6) {
-                    currentLocation = temporaryLocation;
-                }
-                break;
-            case "R":
-                temporaryLocation = currentLocation + 1;
-                if (temporaryLocation < 10 && temporaryLocation !== 4 && temporaryLocation !== 7) {
-                    currentLocation = temporaryLocation;
-                }
-                break;
-        }
+        var shifted = puzzle1Processor[direction](x, y);
+        x = shifted.x;
+        y = shifted.y;
     }, this);
 
-    return currentLocation;
+    return puzzle1Grid[x][y];
 }
 
 function calculateNumberPuzzle2(startingLocation, set) {
@@ -259,11 +265,16 @@ module.exports = function () {
         splitInput5 = rawInput5.split(''),
         inputs = [splitInput1, splitInput2, splitInput3, splitInput4, splitInput5];
 
+    // TEST DATA
+    //inputs = [splitInput1, splitInput2, splitInput3, splitInput4];
+
     // Puzzle 1
     var puzzle1Answer = puzzle1(inputs);
+    // Should be 18843
     console.log('--- Puzzle 1 - Answer: ' + puzzle1Answer + '.');
 
     // Puzzle 2
     var puzzle2Answer = puzzle2(inputs);
+    // Should be 67BB9
     console.log('--- Puzzle 2 - Answer: ' + puzzle2Answer + '.');
 };
