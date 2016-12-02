@@ -37,19 +37,6 @@ var puzzle1Grid = [
             };
         }
     },
-    /*
-
-    Bounds detection on this shape:
-
-        1
-      2 3 4
-    5 6 7 8 9
-      A B C
-        D
-
-    Maybe a better way? This is rough but it works.
-    
-    */
     puzzle2Grid = [
         [null, null, 13, null, null],
         [null, 10, 11, 12, null],
