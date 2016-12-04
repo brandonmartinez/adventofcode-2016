@@ -58,8 +58,33 @@ function processRawInput(rawInput) {
     return processedInput;
 }
 
-function puzzle1(sets) {
-    var sectorIdSum = 0;
+function decryptShiftCypher(str, amount) {
+
+    // Wrap the amount
+    if (amount < 0)
+        return decryptShiftCypher(str, amount + 26);
+
+    // Make an output variable
+    var output = '';
+
+    // Go through each character
+    for (var i = 0; i < str.length; i++) {
+        var character = str[i],
+            code = str.charCodeAt(i);
+        if (character === '-') {
+            output += ' ';
+        } else {
+            output += String.fromCharCode(((code - 97 + amount) % 26) + 97);
+        }
+    }
+
+    // All done!
+    return output;
+
+};
+
+function stripDecoyData(sets) {
+    var matchedSets = [];
 
     sets.forEach(function (set) {
         var matched = true;
@@ -69,14 +94,36 @@ function puzzle1(sets) {
             }
         }
         if (matched) {
-            sectorIdSum += set.sectorId;
+            set.decryptedString = decryptShiftCypher(set.encryptedString, set.sectorId);
+            matchedSets.push(set);
         }
     }, this);
+
+    return matchedSets;
+}
+
+function puzzle1(sets) {
+    var matchedSets = stripDecoyData(sets);
+    var sectorIdSum = 0;
+
+    matchedSets.forEach(function (set) {
+        sectorIdSum += set.sectorId;
+    }, this);
+
     return sectorIdSum;
 }
 
 function puzzle2(sets) {
-    return '';
+    var matchedSets = stripDecoyData(sets),
+        northPoleSectorId;
+
+    matchedSets.forEach(function (set) {
+        if (set.decryptedString.includes('northpole')) {
+            northPoleSectorId = set.sectorId;
+        }
+    }, this);
+
+    return northPoleSectorId;
 }
 
 
