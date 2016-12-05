@@ -128,7 +128,7 @@ function puzzle2(sets) {
 
 
 module.exports = function () {
-    console.log('---DAY 04-----------------')
+    console.log('---DAY 04-----------------');
 
     // Load input from file, split based on line then whitespace
     var rawInput = fs.readFileSync(path + '/days/' + 'day04input.txt', 'utf8');
