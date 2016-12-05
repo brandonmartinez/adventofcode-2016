@@ -2,41 +2,52 @@ var fs = require('fs'),
     md5 = require('md5'),
     path = process.cwd();
 
-function puzzle1(input) {
-    var password = '';
+function processRawInput(input) {
+    var puzzle1Password = '',
+        puzzle2PasswordCharacters = ['', '', '', '', '', '', '', ''],
+        puzzle2Password = '';
+    puzzle2CollectedCharacters = 0;
 
-    for (var i = 0; password.length < 8; i++) {
+    for (var i = 0; puzzle1Password.length < 8 || puzzle2CollectedCharacters < 8; i++) {
         var stringToHash = input + i.toString(),
-            hash = md5(stringToHash),
-            substringToCheck = hash.substring(0, 5);
-        if (i % 10000 === 0) {
-            console.log('Numbers up to ' + i + ' checked.');
-        }
+            hash = md5(stringToHash);
 
-        if (substringToCheck === '00000') {
-            password += hash[5];
+        if (hash.substring(0, 5) === '00000') {
+            if (puzzle1Password.length < 8) {
+                puzzle1Password += hash[5];
+            }
+
+            var position = parseInt(hash[5], 10);
+
+            if (!isNaN(position) && position < 8 && !puzzle2PasswordCharacters[position]) {
+                puzzle2PasswordCharacters[position] = hash[6];
+                puzzle2CollectedCharacters++;
+            }
         }
     }
 
-    return password;
-}
+    puzzle2PasswordCharacters.forEach(function (c) {
+        puzzle2Password += c;
+    }, this);
 
-function puzzle2(input) {
-    return '';
+    return {
+        puzzle1Answer: puzzle1Password,
+        puzzle2Answer: puzzle2Password
+    };
 }
-
 
 module.exports = function () {
-    console.log('---DAY 05-----------------');
+    console.log('---DAY 05----------------- NOTE: this one takes a while to run');
 
-    // Load input from file, split based on line then whitespace
     var rawInput = 'ffykfhsq';
 
+    var results = processRawInput(rawInput);
+
     // Puzzle 1
-    var puzzle1Answer = puzzle1(rawInput);
+    var puzzle1Answer = results.puzzle1Answer;
     console.log('--- Puzzle 1 - Answer: ' + puzzle1Answer + '.');
 
     // Puzzle 2
-    var puzzle2Answer = puzzle2(splitInput);
+    var puzzle2Answer = results.puzzle2Answer;
     console.log('--- Puzzle 2 - Answer: ' + puzzle2Answer + '.');
 };
