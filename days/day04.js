@@ -2,7 +2,9 @@ var fs = require('fs'),
     path = process.cwd();
 
 function processLetterCounts(encryptedString) {
-    var uniqueLetters = encryptedString.replace(/\-/g, '').split('').filter(function (item, i, ar) { return ar.indexOf(item) === i; }).sort(),
+    var uniqueLetters = encryptedString.replace(/\-/g, '').split('').filter(function (item, i, ar) {
+            return ar.indexOf(item) === i;
+        }).sort(),
         letterCounts = [];
 
     uniqueLetters.forEach(function (letter) {
@@ -13,7 +15,7 @@ function processLetterCounts(encryptedString) {
     return letterCounts.sort(function (a, b) {
         // Check if count is higher first (descending)
         if (a[1] > b[1]) {
-            return - 1;
+            return -1;
         }
 
         if (a[1] < b[1]) {
@@ -22,7 +24,7 @@ function processLetterCounts(encryptedString) {
 
         // Check if letter value is higher (ascending)
         if (a[0] < b[0]) {
-            return - 1;
+            return -1;
         }
 
         if (a[0] > b[0]) {
@@ -81,7 +83,7 @@ function decryptShiftCypher(str, amount) {
     // All done!
     return output;
 
-};
+}
 
 function stripDecoyData(sets) {
     var matchedSets = [];
