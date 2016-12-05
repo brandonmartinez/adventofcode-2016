@@ -90,9 +90,9 @@ module.exports = function () {
 
     // Puzzle 1
     var puzzle1Answer = puzzle1(splitInput);
-    console.log('--- Puzzle 1 - Answer: ' + puzzle1Answer + ' blocks away.');
+    console.log('--- Puzzle 1 - Answer: ' + puzzle1Answer + '.');
 
     // Puzzle 2
     var puzzle2Answer = puzzle2(splitInput);
-    console.log('--- Puzzle 2 - Answer: ' + puzzle2Answer + ' blocks away.');
+    console.log('--- Puzzle 2 - Answer: ' + puzzle2Answer + '.');
 };
