@@ -17,9 +17,8 @@ function rotateStringsToArray(sets) {
     return rotatedArray;
 }
 
-function sortCounts(counts) {
+function sortCountsDescending(counts) {
     var sortedCounts = Object.keys(counts).sort(function (a, b) {
-        // Check if count is higher first (descending)
         if (counts[a] > counts[b]) {
             return -1;
         }
@@ -28,13 +27,29 @@ function sortCounts(counts) {
             return 1;
         }
 
-        return -1;
+        return 0;
     });
 
     return sortedCounts;
 }
 
-function buildStringOfMostCommonCharcterInArrays(rotatedArray) {
+function sortCountsAscending(counts) {
+    var sortedCounts = Object.keys(counts).sort(function (a, b) {
+        if (counts[a] > counts[b]) {
+            return 1;
+        }
+
+        if (counts[a] < counts[b]) {
+            return -1;
+        }
+
+        return 0;
+    });
+
+    return sortedCounts;
+}
+
+function buildStringOfCharacters(rotatedArray, sortDescending) {
     var finalString = '';
 
     for (var a = 0; a < rotatedArray.length; a++) {
@@ -45,7 +60,7 @@ function buildStringOfMostCommonCharcterInArrays(rotatedArray) {
             counts[letter] = (counts[letter] || 0) + 1;
         }
 
-        var sortedCounts = sortCounts(counts);
+        var sortedCounts = (sortDescending)? sortCountsDescending(counts) : sortCountsAscending(counts);
 
         finalString += sortedCounts[0];
     }
@@ -55,11 +70,12 @@ function buildStringOfMostCommonCharcterInArrays(rotatedArray) {
 
 function puzzle1(sets) {
     var rotatedArray = rotateStringsToArray(sets);
-    return buildStringOfMostCommonCharcterInArrays(rotatedArray);
+    return buildStringOfCharacters(rotatedArray, true);
 }
 
 function puzzle2(sets) {
-    return '';
+    var rotatedArray = rotateStringsToArray(sets);
+    return buildStringOfCharacters(rotatedArray, false);
 }
 
 
