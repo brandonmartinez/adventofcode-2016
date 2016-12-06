@@ -2,16 +2,16 @@ var fs = require('fs'),
     path = process.cwd();
 
 function isValidTriangle(set) {
-    return (set[0] + set[1] > set[2])
-        && (set[1] + set[2] > set[0])
-        && (set[0] + set[2] > set[1]);
+    return (set[0] + set[1] > set[2]) &&
+        (set[1] + set[2] > set[0]) &&
+        (set[0] + set[2] > set[1]);
 }
 
 function puzzle1(sets) {
     var validTriangles = [];
 
-    sets.forEach(function(set) {
-        if(isValidTriangle(set)){
+    sets.forEach(function (set) {
+        if (isValidTriangle(set)) {
             validTriangles.push(set);
         }
     }, this);
@@ -22,9 +22,9 @@ function puzzle1(sets) {
 function puzzle2(sets) {
     var shiftedSets = [];
 
-    for(var r = 0; r + 2 < sets.length; r += 3) {
-        for(var c = 0; c < 3; c++) {
-            shiftedSets.push([sets[r][c], sets[r+1][c], sets[r+2][c]]);
+    for (var r = 0; r + 2 < sets.length; r += 3) {
+        for (var c = 0; c < 3; c++) {
+            shiftedSets.push([sets[r][c], sets[r + 1][c], sets[r + 2][c]]);
         }
     }
 
