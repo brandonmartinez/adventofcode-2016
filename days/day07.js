@@ -41,6 +41,21 @@ function containsPalindromeOfSpecifiedLength(input, length) {
     return matches.length === 0 ? null : matches;
 }
 
+function abaContainsBab(potentialAbas, potentialBabs) {
+    var found = false;
+
+    potentialAbas.forEach(function (aba) {
+        potentialBabs.forEach(function (bab) {
+            var inverted = bab[1] + bab[0] + bab[1];
+            if (aba === inverted) {
+                found = true;
+            }
+        });
+    }, this);
+
+    return found;
+}
+
 function puzzle1(sets) {
     var validSets = [];
 
@@ -80,21 +95,6 @@ function puzzle1(sets) {
     }
 
     return validSets.length;
-}
-
-function abaContainsBab(potentialAbas, potentialBabs) {
-    var found = false;
-
-    potentialAbas.forEach(function (aba) {
-        potentialBabs.forEach(function (bab) {
-            var inverted = bab[1] + bab[0] + bab[1];
-            if (aba === inverted) {
-                found = true;
-            }
-        });
-    }, this);
-
-    return found;
 }
 
 function puzzle2(sets) {
