@@ -1,27 +1,44 @@
 var fs = require('fs'),
     path = process.cwd();
 
-function containsAbba(input) {
-    // Default to 4
-    var len = 4;
+function containsPalindromeOfSpecifiedLength(input, length) {
+    var len = length,
+        center = Math.floor(length / 2),
+        odd = center % 2,
+        matches = [];
 
-    if (input.length < len) {
+    if (!length || input.length < len) {
         return false;
     }
 
-    // Sliding window to determine if we've found an ABBA
-    for (var l = len - 1; l < input.length; l++) {
-        // 0 & 3
-        // 1 & 2
-        if (input[l - len + 1] === input[l] &&
-            input[l - len + 2] == input[l - 1] &&
-            input[l - len + 1] !== input[l - len + 2]) {
-            return true;
+    // Sliding window to determine if we've found a palindrome
+    for (var l = 0; l < input.length - length + 1; l++) {
+        var substring = input.substring(l, l + length),
+            invalidated = false;
+
+        for (var i = 0; i < center; i++) {
+            if (substring[i] !== substring[length - i - 1]) {
+                invalidated = true;
+            }
+
+            // Current character cannot exist prior
+            for (var p = 0; p < i; p++) {
+                if (substring[p] === substring[i]) {
+                    invalidated = true;
+                }
+            }
+
+            if (odd && substring[center] === substring[i]) {
+                invalidated = true;
+            }
+        }
+
+        if (!invalidated) {
+            matches.push(substring);
         }
     }
 
-    return false;
-
+    return matches.length === 0 ? null : matches;
 }
 
 function puzzle1(sets) {
@@ -44,13 +61,13 @@ function puzzle1(sets) {
             m.forEach(function (match, groupIndex) {
                 // Group 1 should *not* have an ABBA
                 if (match && groupIndex == 1) {
-                    if (containsAbba(match.replace(/\[\]/g, ''))) {
+                    if (containsPalindromeOfSpecifiedLength(match.replace(/\[\]/g, ''), 4)) {
                         hasInvalidAbba = true;
                     }
                 }
 
                 if (match && groupIndex === 2) {
-                    if (containsAbba(match)) {
+                    if (containsPalindromeOfSpecifiedLength(match, 4)) {
                         hasValidAbba = true;
                     }
                 }
@@ -65,8 +82,61 @@ function puzzle1(sets) {
     return validSets.length;
 }
 
+function abaContainsBab(potentialAbas, potentialBabs) {
+    var found = false;
+
+    potentialAbas.forEach(function (aba) {
+        potentialBabs.forEach(function (bab) {
+            var inverted = bab[1] + bab[0] + bab[1];
+            if (aba === inverted) {
+                found = true;
+            }
+        });
+    }, this);
+
+    return found;
+}
+
 function puzzle2(sets) {
-    return '';
+    var validSets = [];
+
+    for (var i = 0; i < sets.length; i++) {
+        var regex = /(\[[a-z]+\])|([a-z]+)/g,
+            str = sets[i],
+            m,
+            potentialAbas = [],
+            potentialBabs = [];
+
+        while ((m = regex.exec(str)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            m.forEach(function (match, groupIndex) {
+                if (match && groupIndex == 1) {
+                    var matchedBabs = containsPalindromeOfSpecifiedLength(match.replace(/\[\]/g, ''), 3);
+                    if (matchedBabs) {
+                        potentialBabs = potentialBabs.concat(matchedBabs);
+                    }
+                }
+
+                if (match && groupIndex === 2) {
+                    var matchedAbas = containsPalindromeOfSpecifiedLength(match, 3);
+                    if (matchedAbas) {
+                        potentialAbas = potentialAbas.concat(matchedAbas);
+                    }
+                }
+            });
+        }
+
+        if (potentialAbas.length > 0 && potentialBabs.length > 0 && abaContainsBab(potentialAbas, potentialBabs)) {
+            validSets.push(str);
+        }
+    }
+
+    return validSets.length;
 }
 
 
