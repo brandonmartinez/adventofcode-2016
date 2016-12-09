@@ -63,8 +63,9 @@ function processRawInput(rawInput) {
 function decryptShiftCypher(str, amount) {
 
     // Wrap the amount
-    if (amount < 0)
+    if (amount < 0) {
         return decryptShiftCypher(str, amount + 26);
+    }
 
     // Make an output variable
     var output = '';
@@ -82,7 +83,6 @@ function decryptShiftCypher(str, amount) {
 
     // All done!
     return output;
-
 }
 
 function stripDecoyData(sets) {
