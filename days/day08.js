@@ -37,9 +37,7 @@ function reverseShiftArray(arr, units) {
 }
 
 function rotateRow(screen, row, units) {
-    console.log(screen, row, units);
     var r = screen[row];
-    console.log(r);
     screen[row] = reverseShiftArray(r, units);
 
     return screen;
@@ -88,38 +86,45 @@ function processCommand(screen, input) {
     return screen;
 }
 
-function printScreen(screen) {
-    var filledBits = 0;
+function generateScreenOutput(screen) {
+    var filledBits = 0,
+        message = '';
     for (var r = 0; r < screen.length; r++) {
         var row = '';
         for (var c = 0; c < screen[r].length; c++) {
             if (screen[r][c]) {
-                row += 'X';
+                row += 'XX';
                 filledBits++;
             } else {
-                row += 'o';
+                row += '  ';
             }
         }
-        console.log(row);
+
+        message += row + '\n';
     }
 
-    console.log();
-
-    return filledBits;
+    return {
+        filledBits: filledBits,
+        message: message
+    };
 }
 
-function puzzle1(sets) {
+function processSets(sets) {
     var screen = createScreenArray(50, 6);
 
     sets.forEach(function (set) {
         screen = processCommand(screen, set);
     }, this);
 
-    return printScreen(screen);
+    return generateScreenOutput(screen);
 }
 
-function puzzle2(sets) {
-    return '';
+function puzzle1(input) {
+    return input.filledBits;
+}
+
+function puzzle2(input) {
+    return '\n\n\n' + input.message + '\n';
 }
 
 module.exports = function () {
@@ -129,11 +134,13 @@ module.exports = function () {
     var rawInput = fs.readFileSync(path + '/days/' + 'day08input.txt', 'utf8');
     splitInput = rawInput.split(/[\r\n]+/g);
 
+    var processedSets = processSets(splitInput);
+
     // Puzzle 1
-    var puzzle1Answer = puzzle1(splitInput);
+    var puzzle1Answer = puzzle1(processedSets);
     console.log('--- Puzzle 1 - Answer: ' + puzzle1Answer + '.');
 
     // Puzzle 2
-    var puzzle2Answer = puzzle2(splitInput);
+    var puzzle2Answer = puzzle2(processedSets);
     console.log('--- Puzzle 2 - Answer: ' + puzzle2Answer + '.');
 };
