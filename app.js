@@ -5,7 +5,8 @@ var day01 = require('./days/day01.js'),
     day05 = require('./days/day05.js'),
     day06 = require('./days/day06.js'),
     day07 = require('./days/day07.js'),
-    day08 = require('./days/day08.js');
+    day08 = require('./days/day08.js'),
+    day09 = require('./days/day09.js');
 
 day01();
 day02();
@@ -15,3 +16,4 @@ day05();
 day06();
 day07();
 day08();
+day09();
